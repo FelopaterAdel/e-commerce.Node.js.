@@ -6,6 +6,7 @@ import orderRouter from './routes/order.js';
 import sellerRouter from './routes/seller.js';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import serverless from 'serverless-http';
 
 dotenv.config();
 const app = express();
@@ -32,3 +33,4 @@ app.use("/seller", sellerRouter);
 
 
 
+export const handler = serverless(app);
