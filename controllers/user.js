@@ -1,8 +1,8 @@
-import { catchAsync } from "../Utlites/wrapperFunction.js";
+import { catchAsync } from "../utils/wrapperFunction.js";
 import userModel from "../models/user.js"
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-
+import sendEmail from '../utils/sendEmail.js';
 
 export const Register = catchAsync(async (req, res, next) => {
     const user = req.body;
@@ -124,3 +124,30 @@ export const Delete_user = catchAsync(async (req, res, next) => {
 
 
 })
+
+export const forgot_password=catchAsync(async(req,res,next)=>{
+const { email } = req.body;
+
+  try {
+    const user = await userModel.findOne({ email });
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const resetToken =jwt.sign({ id: user._id, email: user.email, UserType: user.UserType }, process.env.SECRET, { expiresIn: "1h" });
+
+    await user.save();
+
+    const resetUrl = `http://localhost:3000/reset-password/${resetToken}`;
+    const message = `Click to reset your password: ${resetUrl}`;
+
+    await sendEmail({
+      to: user.email,
+      subject: 'Password Reset',
+      text: message,
+    });
+
+    res.json({ message: 'Reset email sent' });
+  } catch (err) {
+        console.error('Error during forgot-password:', err); 
+    res.status(500).json({ message: 'Error sending reset email' });
+  }
+});

@@ -1,4 +1,4 @@
-import {catchAsync} from "../Utlites/wrapperFunction.js";
+import {catchAsync} from "../utils/wrapperFunction.js";
 import Product from "../models/product.js"
 
 

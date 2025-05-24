@@ -1,4 +1,4 @@
-import {catchAsync} from "../Utlites/wrapperFunction.js";
+import {catchAsync} from "../utils/wrapperFunction.js";
 import orderModel from "../models/order.js"
 export const getAllOrders = catchAsync(async (req, res, next) => {
  let order = await orderModel.find()
